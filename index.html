@@ -5,16 +5,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Murabaha System</title>
 
-  <!-- PWA manifest -->
   <link rel="manifest" href="manifest.json">
 
-  <!-- iOS PWA support -->
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="Murabaha">
   <link rel="apple-touch-icon" href="icon-192.png">
-
-  <!-- Theme color -->
   <meta name="theme-color" content="#081f3d">
   <meta name="robots" content="noindex, nofollow">
 
@@ -22,193 +18,226 @@
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
     html, body {
-      width: 100%;
-      height: 100%;
-      overflow: hidden;
-      background: #071426;
+      width: 100%; height: 100%;
+      background: radial-gradient(circle at top, #0e2a52, #071426);
       font-family: 'Segoe UI', Roboto, Arial, sans-serif;
+      overflow: hidden;
     }
 
-    /* ── SPLASH SCREEN ── */
-    #splash {
-      position: fixed;
-      inset: 0;
-      z-index: 100;
-      background: radial-gradient(circle at top, #0e2a52, #071426);
-      display: flex;
+    .screen {
+      display: none;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      transition: opacity 0.4s ease;
+      height: 100vh;
+      padding: 32px 24px;
+      text-align: center;
     }
-
-    #splash.hide {
-      opacity: 0;
-      pointer-events: none;
-    }
+    .screen.active { display: flex; }
 
     .logo-wrap {
-      width: 100px;
-      height: 100px;
-      border-radius: 50%;
+      width: 90px; height: 90px;
+      border-radius: 22px;
       overflow: hidden;
       box-shadow: 0 8px 32px rgba(0,0,0,0.5);
-      margin-bottom: 24px;
-      border: 3px solid rgba(255,255,255,0.15);
+      margin-bottom: 20px;
+      border: 2px solid rgba(255,255,255,0.12);
     }
+    .logo-wrap img { width: 100%; height: 100%; object-fit: cover; }
 
-    .logo-wrap img {
+    .app-name { font-size: 24px; font-weight: 700; color: #fff; margin-bottom: 6px; }
+    .app-tagline { font-size: 13px; color: #94a3b8; margin-bottom: 32px; }
+
+    /* Install card */
+    .install-card {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 16px;
+      padding: 20px 18px;
+      max-width: 320px;
       width: 100%;
-      height: 100%;
-      object-fit: cover;
+      margin-bottom: 20px;
     }
 
-    .app-name {
-      font-size: 26px;
-      font-weight: 700;
-      color: #ffffff;
-      margin-bottom: 8px;
+    .step {
+      display: flex; align-items: flex-start; gap: 14px;
+      margin-bottom: 16px; text-align: left;
+    }
+    .step:last-child { margin-bottom: 0; }
+
+    .step-num {
+      min-width: 28px; height: 28px;
+      background: #10b981; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 12px; font-weight: 700; color: #fff;
     }
 
-    .app-tagline {
-      font-size: 13px;
-      color: #94a3b8;
-      margin-bottom: 48px;
+    .step-text strong { display: block; color: #e2e8f0; font-size: 14px; margin-bottom: 2px; }
+    .step-text span { color: #64748b; font-size: 12px; }
+
+    .btn-install {
+      width: 100%; max-width: 320px;
+      background: #10b981; color: #fff; border: none;
+      padding: 16px; border-radius: 12px;
+      font-size: 16px; font-weight: 700; cursor: pointer;
+      box-shadow: 0 4px 20px rgba(16,185,129,0.35);
+      margin-bottom: 14px;
     }
 
+    .skip-link {
+      font-size: 13px; color: #475569;
+      text-decoration: underline; cursor: pointer;
+      background: none; border: none;
+    }
+
+    /* Installed screen */
+    .installed-badge {
+      font-size: 56px; margin-bottom: 20px;
+    }
+
+    .open-msg {
+      font-size: 15px; color: #cbd5e1;
+      max-width: 280px; line-height: 1.6; margin-bottom: 32px;
+    }
+
+    .btn-open {
+      width: 100%; max-width: 320px;
+      background: #2563eb; color: #fff; border: none;
+      padding: 16px; border-radius: 12px;
+      font-size: 16px; font-weight: 700; cursor: pointer;
+      box-shadow: 0 4px 20px rgba(37,99,235,0.35);
+    }
+
+    /* Loading screen */
     .spinner {
-      width: 44px;
-      height: 44px;
-      border: 4px solid rgba(255,255,255,0.15);
+      width: 44px; height: 44px;
+      border: 4px solid rgba(255,255,255,0.12);
       border-top-color: #10b981;
       border-radius: 50%;
       animation: spin 1s linear infinite;
       margin-bottom: 20px;
     }
-
     @keyframes spin { to { transform: rotate(360deg); } }
+    .loading-text { font-size: 13px; color: #64748b; }
 
-    .loading-text {
-      font-size: 13px;
-      color: #64748b;
+    .footer { position: fixed; bottom: 14px; font-size: 11px; color: #1e293b; }
+
+    /* iOS guide overlay */
+    #iosGuide {
+      display: none; position: fixed; inset: 0;
+      background: rgba(0,0,0,0.75); z-index: 500;
+      align-items: flex-end; justify-content: center;
     }
+    #iosGuide.show { display: flex; }
 
-    /* ── IFRAME fills full screen ── */
-    #appFrame {
-      position: fixed;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      border: none;
-      display: none;
-    }
-
-    /* ── INSTALL BANNER (shown before install) ── */
-    #installBanner {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      z-index: 200;
-      background: #0e2a52;
-      border-top: 1px solid rgba(255,255,255,0.1);
-      padding: 14px 20px;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      box-shadow: 0 -4px 20px rgba(0,0,0,0.4);
-      transform: translateY(100%);
-      transition: transform 0.3s ease;
-    }
-
-    #installBanner.show {
-      transform: translateY(0);
-    }
-
-    #installBanner img {
-      width: 40px;
-      height: 40px;
-      border-radius: 10px;
-    }
-
-    .banner-text {
-      flex: 1;
-    }
-
-    .banner-text strong {
-      display: block;
-      color: #fff;
-      font-size: 14px;
-    }
-
-    .banner-text span {
-      color: #94a3b8;
-      font-size: 12px;
-    }
-
-    .install-btn {
-      background: #10b981;
-      color: #fff;
-      border: none;
-      padding: 9px 18px;
-      border-radius: 8px;
-      font-size: 13px;
-      font-weight: 700;
-      cursor: pointer;
-      white-space: nowrap;
-    }
-
-    .dismiss-btn {
-      background: none;
-      border: none;
-      color: #64748b;
-      font-size: 20px;
-      cursor: pointer;
-      padding: 0 4px;
-    }
-
-    .footer {
-      position: fixed;
-      bottom: 6px;
-      width: 100%;
+    .ios-sheet {
+      background: #0f2540;
+      border-radius: 20px 20px 0 0;
+      padding: 28px 24px 44px;
+      width: 100%; max-width: 480px;
       text-align: center;
-      font-size: 11px;
-      color: #1e293b;
-      z-index: 50;
+      border-top: 1px solid rgba(255,255,255,0.1);
+    }
+    .ios-sheet h3 { color: #fff; font-size: 17px; margin-bottom: 8px; }
+    .ios-sheet > p { color: #94a3b8; font-size: 13px; margin-bottom: 20px; }
+
+    .ios-step {
+      display: flex; align-items: center; gap: 14px;
+      background: rgba(255,255,255,0.05); border-radius: 12px;
+      padding: 14px 16px; margin-bottom: 10px; text-align: left;
+    }
+    .ios-step .icon { font-size: 22px; min-width: 30px; text-align: center; }
+    .ios-step p { color: #cbd5e1; font-size: 14px; margin: 0; }
+    .ios-step strong { color: #fff; }
+
+    .btn-close-ios {
+      margin-top: 20px; background: rgba(255,255,255,0.08);
+      color: #94a3b8; border: none; padding: 12px 32px;
+      border-radius: 10px; font-size: 14px; cursor: pointer;
     }
   </style>
 </head>
 <body>
 
-  <!-- Splash screen -->
-  <div id="splash">
+  <!-- SCREEN 1: Install -->
+  <div class="screen active" id="screen-install">
     <div class="logo-wrap">
-      <img src="icon-192.png" alt="Murabaha Logo"
+      <img src="icon-192.png" alt="Logo"
+           onerror="this.src='https://lh3.googleusercontent.com/d/163JQ6TjViVAknY95wJWkImF-L8IGNeVj'">
+    </div>
+    <div class="app-name">Murabaha System</div>
+    <div class="app-tagline">Finance Management</div>
+
+    <div class="install-card" id="stepsCard">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-text">
+          <strong>Install the App</strong>
+          <span>Tap the Install button below to add to your home screen</span>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-text">
+          <strong>Open from Home Screen</strong>
+          <span>Launch like any native app — no browser needed</span>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-text">
+          <strong>Login & Start Working</strong>
+          <span>Your login page loads instantly every time</span>
+        </div>
+      </div>
+    </div>
+
+    <button class="btn-install" id="btnInstall">⬇ Install App</button>
+    <button class="skip-link" id="btnSkip">Already installed — Open App</button>
+  </div>
+
+  <!-- SCREEN 2: Installed -->
+  <div class="screen" id="screen-installed">
+    <div class="installed-badge">✅</div>
+    <div class="app-name">App Installed!</div>
+    <p class="open-msg">
+      Murabaha System is now on your home screen.<br><br>
+      Tap <strong style="color:#fff">Open App</strong> or close this and tap the icon anytime.
+    </p>
+    <button class="btn-open" id="btnOpen">Open Murabaha System →</button>
+  </div>
+
+  <!-- SCREEN 3: Loading -->
+  <div class="screen" id="screen-loading">
+    <div class="logo-wrap">
+      <img src="icon-192.png" alt="Logo"
            onerror="this.src='https://lh3.googleusercontent.com/d/163JQ6TjViVAknY95wJWkImF-L8IGNeVj'">
     </div>
     <div class="app-name">Murabaha System</div>
     <div class="app-tagline">Finance Management</div>
     <div class="spinner"></div>
-    <div class="loading-text" id="loadingText">Opening app...</div>
+    <div class="loading-text">Opening app...</div>
   </div>
 
-  <!-- App loads here (stays on github.io domain = PWA stays valid) -->
-  <iframe
-    id="appFrame"
-    src="about:blank"
-    allow="forms; scripts; same-origin; popups"
-    sandbox="allow-scripts allow-forms allow-same-origin allow-popups allow-popups-to-escape-sandbox allow-top-navigation"
-  ></iframe>
-
-  <!-- Custom install banner -->
-  <div id="installBanner">
-    <img src="icon-192.png" alt="icon">
-    <div class="banner-text">
-      <strong>Install Murabaha System</strong>
-      <span>Add to home screen for quick access</span>
+  <!-- iOS guide -->
+  <div id="iosGuide">
+    <div class="ios-sheet">
+      <h3>Install on iPhone</h3>
+      <p>Use Safari to install Murabaha on your home screen</p>
+      <div class="ios-step">
+        <div class="icon">⬆️</div>
+        <p>Tap the <strong>Share button</strong> at the bottom of Safari</p>
+      </div>
+      <div class="ios-step">
+        <div class="icon">➕</div>
+        <p>Tap <strong>"Add to Home Screen"</strong></p>
+      </div>
+      <div class="ios-step">
+        <div class="icon">✅</div>
+        <p>Tap <strong>"Add"</strong> to confirm</p>
+      </div>
+      <button class="btn-close-ios" onclick="document.getElementById('iosGuide').classList.remove('show')">Got it</button>
     </div>
-    <button class="install-btn" id="installBtn">Install</button>
-    <button class="dismiss-btn" id="dismissBtn">✕</button>
   </div>
 
   <div class="footer">&copy; 2026 Murabaha System</div>
@@ -216,69 +245,86 @@
   <script>
     const GAS_URL = 'https://script.google.com/macros/s/AKfycbygHUKZUiXgXYVCXVXoQFFcaObH3KpSJHdYlT98KnJLWTUtL1PURdjgCtiwcXVwstqbKA/exec';
 
-    // ── Service Worker ──
     if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('sw.js')
-        .then(() => console.log('SW registered'))
-        .catch(err => console.warn('SW error:', err));
+      navigator.serviceWorker.register('sw.js').catch(() => {});
     }
 
-    // ── Load app in iframe ──
-    window.addEventListener('load', () => {
-      const frame = document.getElementById('appFrame');
-      const splash = document.getElementById('splash');
-      const loadingText = document.getElementById('loadingText');
+    const isInstalled = window.matchMedia('(display-mode: standalone)').matches
+                     || window.navigator.standalone === true;
+    const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
 
-      loadingText.textContent = 'Loading...';
-
-      // Load GAS into iframe
-      frame.src = GAS_URL;
-
-      // Hide splash once iframe loads
-      frame.addEventListener('load', () => {
-        frame.style.display = 'block';
-        splash.classList.add('hide');
-        setTimeout(() => splash.style.display = 'none', 500);
-      });
-
-      // Fallback: hide splash after 5s even if iframe load event doesn't fire
-      setTimeout(() => {
-        frame.style.display = 'block';
-        splash.classList.add('hide');
-        setTimeout(() => splash.style.display = 'none', 500);
-      }, 5000);
-    });
-
-    // ── PWA Install Prompt ──
     let deferredPrompt = null;
-    const banner = document.getElementById('installBanner');
-    const installBtn = document.getElementById('installBtn');
-    const dismissBtn = document.getElementById('dismissBtn');
 
     window.addEventListener('beforeinstallprompt', (e) => {
       e.preventDefault();
       deferredPrompt = e;
-      // Show banner after a short delay so user sees the app first
-      setTimeout(() => banner.classList.add('show'), 3000);
     });
 
-    installBtn.addEventListener('click', async () => {
-      if (!deferredPrompt) return;
-      banner.classList.remove('show');
-      deferredPrompt.prompt();
-      const { outcome } = await deferredPrompt.userChoice;
-      console.log('Install outcome:', outcome);
-      deferredPrompt = null;
+    function showScreen(id) {
+      document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
+    }
+
+    function launchApp() {
+      window.location.replace(GAS_URL);
+    }
+
+    window.addEventListener('load', () => {
+      if (isInstalled) {
+        // Running as installed PWA → skip install screen, go straight to app
+        showScreen('screen-loading');
+        setTimeout(launchApp, 900);
+        return;
+      }
+
+      // Show install screen
+      showScreen('screen-install');
+
+      if (isIOS) {
+        document.getElementById('stepsCard').innerHTML = `
+          <div class="step"><div class="step-num">1</div><div class="step-text">
+            <strong>Open in Safari</strong><span>Make sure you're using Safari, not Chrome</span>
+          </div></div>
+          <div class="step"><div class="step-num">2</div><div class="step-text">
+            <strong>Tap Share ⬆</strong><span>The share button at the bottom of Safari</span>
+          </div></div>
+          <div class="step"><div class="step-num">3</div><div class="step-text">
+            <strong>Add to Home Screen</strong><span>Tap it, then tap Add to confirm</span>
+          </div></div>`;
+        document.getElementById('btnInstall').textContent = '📱 Show Me How';
+      }
     });
 
-    dismissBtn.addEventListener('click', () => {
-      banner.classList.remove('show');
+    document.getElementById('btnInstall').addEventListener('click', async () => {
+      if (isIOS) {
+        document.getElementById('iosGuide').classList.add('show');
+        return;
+      }
+      if (deferredPrompt) {
+        deferredPrompt.prompt();
+        const { outcome } = await deferredPrompt.userChoice;
+        deferredPrompt = null;
+        if (outcome === 'accepted') {
+          showScreen('screen-installed');
+        }
+      } else {
+        // Prompt not ready — show manual tip
+        alert('Tap the ⋮ menu in Chrome → "Add to Home screen" to install.');
+      }
     });
 
-    // Hide banner if already installed
+    document.getElementById('btnOpen').addEventListener('click', () => {
+      showScreen('screen-loading');
+      setTimeout(launchApp, 600);
+    });
+
+    document.getElementById('btnSkip').addEventListener('click', () => {
+      showScreen('screen-loading');
+      setTimeout(launchApp, 600);
+    });
+
     window.addEventListener('appinstalled', () => {
-      banner.classList.remove('show');
-      deferredPrompt = null;
+      showScreen('screen-installed');
     });
   </script>
 
